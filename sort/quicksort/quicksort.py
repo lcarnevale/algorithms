@@ -12,6 +12,9 @@ __author__ = 'Lorenzo Carnevale <lcarnevale@unime.it>'
 __credits__ = 'Algorithms and Data Structure, University of Messina'
 __description__ = 'Quicksort'
 
+import sys
+import logging
+
 
 def quicksort(data, leftmark, rightmark):
     """Quicksort implementation.
@@ -63,35 +66,42 @@ def partition(data, leftmark, rightmark):
     Returns:
         (int) position of the pivot
     """
-    print("arr[] = %s" % (data))
-    print("Indexes: %s" % '  '.join(str(i) for i in range(0,len(data))))
+    logging.info("arr[] = %s" % (data))
+    logging.info("Indexes: %s" % '  '.join(str(i) for i in range(0,len(data))))
     pivot = data[rightmark] # pivot
     i = leftmark - 1 # index of smaller element
-    print("\nleftmark = %s, rightmark = %s, pivot = arr[rightmark] = %s" % (leftmark, rightmark, pivot))
-    print("Inizialize index of smaller element, i = %s" % (i))
-    print("\nTraverse elements from j = leftmark to rightmark - 1")
+    logging.info("\nleftmark = %s, rightmark = %s, pivot = arr[rightmark] = %s" % (leftmark, rightmark, pivot))
+    logging.info("Inizialize index of smaller element, i = %s" % (i))
+    logging.info("\nTraverse elements from j = leftmark to rightmark - 1")
     for j in range(leftmark, rightmark):
         if data[j] <= pivot: # if current element is smaller than or equal to pivot
-            print("j = %s : Since arr[j] <= pivot, do i++ and swap(arr[i], arr[j])" % (j))
+            logging.info("j = %s : Since arr[j] <= pivot, do i++ and swap(arr[i], arr[j])" % (j))
             i += 1
-            print("i = %s" % (i))
+            logging.info("i = %s" % (i))
             data[i], data[j] = data[j], data[i]
-            print("arr[] = %s, we swap %s and %s\n" % (data, data[j], data[i]))
+            logging.info("arr[] = %s, we swap %s and %s\n" % (data, data[j], data[i]))
         else:
-            print("j = %s : Since arr[j] > pivot, do nothing\n" % (j))
-    print("We come out of loop because j is now equal to rightmark-1")
-    print("Finally we place pivot at correct position by swapping")
-    print("arr[i+1] and arr[rightmark] (or pivot)")
+            logging.info("j = %s : Since arr[j] > pivot, do nothing\n" % (j))
+    logging.info("We come out of loop because j is now equal to rightmark-1")
+    logging.info("Finally we place pivot at correct position by swapping")
+    logging.info("arr[i+1] and arr[rightmark] (or pivot)")
     data[i + 1], data[rightmark] = data[rightmark], data[i + 1]
-    print("arr[] = %s, we swap %s and %s" % (data, data[rightmark], data[i + 1]))
-    print("\nNow %s is at its correct place. All elements smaller than" % (pivot))
-    print("%s are before it and all elements greater than %s are after it\n" % (pivot, pivot))
+    logging.info("arr[] = %s, we swap %s and %s" % (data, data[rightmark], data[i + 1]))
+    logging.info("\nNow %s is at its correct place. All elements smaller than" % (pivot))
+    logging.info("%s are before it and all elements greater than %s are after it\n" % (pivot, pivot))
     return i + 1
 
 def main():
+    logging.basicConfig(
+        level=logging.INFO,
+        format="",
+        handlers=[
+            logging.StreamHandler(sys.stdout)
+        ]
+    )
     unsorted_numbers = [2,8,7,1,3,5,6,4]
     leftmark, rightmark = 0, len(unsorted_numbers)-1
-    print( quicksort(unsorted_numbers, leftmark, rightmark) )
+    logging.info( quicksort(unsorted_numbers, leftmark, rightmark) )
 
 if __name__ == '__main__':
     main()
