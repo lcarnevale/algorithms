@@ -114,6 +114,86 @@ def is_complete(graph):
             return False
     return True
 
+def dfs_recursive(graph, start, explored=[]):
+    if start not in explored:
+        explored.append(start)
+        print("\n%s not explored yet. Explored[]: %s" % (start, explored))
+        print("\nGet list of vertex reachable from %s" % (start))
+        for v in list(graph[start]):
+            print("v=%s, explored[]: %s" % (v, explored))
+            if v not in explored:
+                print("Explore it!")
+                explored.append(v)
+                print("Explored[]: %s, and traverse %s recursivelly" % (explored, v))
+                dfs_recursive(graph, v, explored)
+    return explored
+
+def dfs_iterative(graph, start):
+    explored = []
+    stack = []
+    stack.append(start)
+    while stack:
+        u = stack.pop()
+        if u not in explored:
+            explored.append(u)
+            for v in list(graph[u]):
+                stack.append(v)
+    return explored
+
+def dfs(graph):
+    """ Traverse in DFS
+
+    -1: white
+    0: gray
+    1: black
+    """
+    exploration = dict()
+    for u in get_nodes(graph):
+        exploration[u] = -1 # white
+    print("Exploration[]: %s" % (exploration))
+
+    for u in exploration.keys():
+        print("Exploration[u] = %s is -1 (white)?" % (exploration[u]))
+        if exploration[u] == -1:
+            dfs_visit(graph, u, exploration)
+    return exploration
+
+def dfs_visit(graph, vertex, exploration):
+    exploration[vertex] = 0
+    print("Exploration[u] = %s is 0 (gray), Exploration[]: %s" % (exploration[vertex], exploration))
+    for v in graph[vertex]:
+        print("Exploration[u] = %s is -1 (white)? Exploration[]: %s" % (exploration[v], exploration))
+        if exploration[v] == -1:
+            dfs_visit(graph, v, exploration)
+    exploration[vertex] = 1
+    print("Exploration[u] = %s is 1 (black), Exploration[]: %s" % (exploration[vertex], exploration))
+
+def bfs(graph, s):
+    exploration = dict()
+    for u in get_nodes(graph):
+        if u != s:
+            exploration[u] = -1
+    print("Exploration[]: %s" % (exploration))
+
+    exploration[s] = 0
+    stack = list()
+    stack.append(s)
+    print("Stacking %s, Q[]: %s" % (s, stack))
+    print("Exploration[]: %s" % (exploration))
+
+    while stack:
+        u = stack.pop()
+        print("Exploring vertex adjacent to %s (u)" % (u))
+        for v in graph[u]:
+            print("Exploration[v] = %s is -1 (white)? Exploration[]: %s" % (exploration[v], exploration))
+            if exploration[v] == -1:
+                exploration[v] = 0
+                stack.append(v)
+                print("Stacking %s, Q[]: %s" % (v, stack))
+                print("Exploration[]: %s" % (exploration))
+        exploration[u] = 1
+        print("Exploration[u] = %s is 1 (black), Exploration[]: %s" % (exploration[u], exploration))
+    return exploration
 
 def main():
     graph = create_graph()
@@ -134,9 +214,9 @@ def main():
         ['ORD','MIA'],
         ['DFW','ORD'],
         ['DFW','SFO'],
-        ['DFW','LXA'],
+        ['DFW','LAX'],
         ['MIA','DFW'],
-        ['MIA','LXA'],
+        ['MIA','LAX'],
     ])
     print( "Edges[]: %s " % (get_edges(graph)) )
     print( "Edges size: %s" % (edges_count(graph)) )
@@ -146,6 +226,15 @@ def main():
 
     print( "Graph degree: %s" % (degree(graph)) )
     print( "Graph is complete: %s" % (is_complete(graph)) )
+
+    print( "Graph[]: %s" % (graph) )
+    print( "Traverse from %s: %s" % (node, dfs_recursive(graph, node)) )
+    print( "Traverse from %s: %s" % (node, dfs_iterative(graph, node)) )
+
+    print(dfs(graph))
+
+    print(bfs(graph, node))
+
 
 
 if __name__ == "__main__":
